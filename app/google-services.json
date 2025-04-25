@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "528477770837",
+    "project_id": "me-sport-we",
+    "storage_bucket": "me-sport-we.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528477770837:android:b7c3ebba390c9be7e730dc",
+        "android_client_info": {
+          "package_name": "com.example.mesportwe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAh2j8U28mkPZvdqcMNynBEPBWdukcSXaw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
