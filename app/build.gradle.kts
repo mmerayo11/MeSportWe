@@ -4,7 +4,6 @@ plugins {
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0" // this version matches your Kotlin version
 }
-
 android {
     namespace = "com.example.mesportwe"
     compileSdk = 34
@@ -49,7 +48,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx.v1131)
     implementation(libs.androidx.lifecycle.runtime.ktx.v270)
     implementation(libs.androidx.activity.compose.v190)
@@ -58,40 +56,27 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
-
-    //implementation("androidx.compose.material:material:1.4.2")
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material3.android)
-    // view model
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    // iconos
     implementation(libs.androidx.material.icons.extended.android)
-    // rebote, no funciona
     implementation(libs.accompanist.insets)
-    // cambiar barra de tareas
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.lifecycle.livedata.ktx)
-    //implementation(libs.firebase.auth.ktx)
-    //implementation(libs.firebase.perf.ktx)
-    // ocultar top bar
-    // implementation("com.google.accompanist:accompanist-coil:0.16.0")
-    // animaciones nav host
-    // implementation("com.google.accompanist:accompanist-navigation-animation:0.23.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit.v121)
     androidTestImplementation(libs.androidx.espresso.core.v361)
-
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
-    implementation(platform(libs.firebase.bom))
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0")) // Usa BoM para manejar versiones automáticamente
     implementation("com.google.firebase:firebase-analytics")
-    // implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.android.gms:play-services-auth:21.1.0")
-    implementation("com.google.firebase:firebase-firestore:25.1.1")
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-appcheck-playintegrity")
 
     implementation("androidx.compose.runtime:runtime-livedata:1.6.6")
     implementation("androidx.datastore:datastore-preferences:1.1.0")
@@ -101,4 +86,8 @@ dependencies {
 
     implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.0.2")
     implementation("com.maxkeppeler.sheets-compose-dialogs:clock:1.0.2")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("com.google.firebase:firebase-storage-ktx:20.1.0")
+    implementation("com.google.firebase:firebase-appcheck-playintegrity")
+
 }
