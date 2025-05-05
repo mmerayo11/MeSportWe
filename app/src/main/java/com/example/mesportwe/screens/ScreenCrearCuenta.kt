@@ -3,11 +3,21 @@ package com.example.mesportwe.screens
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -50,6 +60,16 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import java.util.regex.Pattern
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import coil.compose.AsyncImage
+import com.google.firebase.storage.FirebaseStorage
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -112,10 +132,15 @@ fun BodyContentCC(navController: NavController){
     val niveles = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
     var nivelElegido by remember { mutableStateOf(niveles[0]) }
     var expanded3 by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
+    var imagenUri by remember { mutableStateOf<Uri?>(null) }
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? -> imagenUri = uri }
 
     Surface {
         Column(
-            modifier = Modifier.fillMaxSize().padding(6.dp),
+            modifier = Modifier.fillMaxSize().verticalScroll(scrollState).padding(6.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -331,17 +356,46 @@ fun BodyContentCC(navController: NavController){
                 }
             }
 
+            Text(text = "Imagen de perfil", fontWeight = FontWeight.Bold)
+
+            Box(
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .background(Color.LightGray)
+                    .clickable { launcher.launch("image/*") },
+                contentAlignment = Alignment.Center
+            ) {
+                if (imagenUri != null) {
+                    AsyncImage(
+                        model = imagenUri,
+                        contentDescription = "Imagen seleccionada",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.CameraAlt,
+                        contentDescription = "Seleccionar imagen",
+                        tint = Color.DarkGray,
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
             Button(onClick = {
                 registrarUsuario(
                     textoUsu.trim(),
                     textoCorreo.trim(),
                     textoContra.trim(),
                     textoContra2.trim(),
-                    textoUbi.trim(),
+                    ciudadElegida.trim(),
                     textoNombre.trim(),
                     textoApellidos.trim(),
-                    textoDeportes.trim(),
-                    textoNivel.trim(),
+                    deporteElegido.trim(),
+                    nivelElegido.trim(),
+                    imagenUri,
                     navController,
                     context,
                     { nuevoMensaje -> textoErrorUsuario = nuevoMensaje },
@@ -377,6 +431,7 @@ fun registrarUsuario(
     textoApellidos: String,
     textoDeportes: String,
     textoNivel: String,
+    imagenUri: Uri?,
     navController: NavController,
     context: Context,
     actualizarErrorUsuario: (String) -> Unit,
@@ -388,7 +443,7 @@ fun registrarUsuario(
     actualizarErrorApellidos: (String) -> Unit,
     actualizarErrorDeportes: (String) -> Unit,
     actualizarErrorNivel: (String) -> Unit,
-    actualizarTextoSnackbar: (String) -> Unit,
+    actualizarTextoSnackbar: (String) -> Unit
 ) {
     val auth = Firebase.auth
     val db = Firebase.firestore
@@ -420,22 +475,31 @@ fun registrarUsuario(
             Log.d("registro", "Todos los campos deben estar rellenos")
             if (textoUsu.isEmpty()) {
                 actualizarErrorUsuario("Este campo es obligatorio")
+                Log.d("registro", "usuario")
             } else if (textoCorreo.isEmpty()) {
                 actualizarErrorCorreo("Este campo es obligatorio")
+                Log.d("registro", "correo")
             } else if (textoContra.isEmpty()) {
                 actualizarErrorContra("Este campo es obligatorio")
+                Log.d("registro", "contra")
             } else if (textoContra2.isEmpty()) {
                 actualizarErrorContra2("Este campo es obligatorio")
+                Log.d("registro", "contra2")
             } else if (textoUbi.isEmpty()) {
                 actualizarErrorUbi("Este campo es obligatorio")
+                Log.d("registro", "ubi")
             } else if (textoNombre.isEmpty()) {
                 actualizarErrorNombre("Este campo es obligatorio")
+                Log.d("registro", "nombre")
             } else if (textoApellidos.isEmpty()) {
                 actualizarErrorApellidos("Este campo es obligatorio")
+                Log.d("registro", "apellidos")
             } else if (textoDeportes.isEmpty()) {
                 actualizarErrorDeportes("Este campo es obligatorio")
+                Log.d("registro", "deporte")
             } else if (textoNivel.isEmpty()) {
                 actualizarErrorNivel("Este campo es obligatorio")
+                Log.d("registro", "nivel")
             }
 
         } else if (!isEmailValid(textoCorreo)) {
@@ -451,6 +515,9 @@ fun registrarUsuario(
         } else if (!isLevelValid(textoNivel)){
             Log.d("registro", "Nivel no válido")
             actualizarErrorNivel("El nivel no es un entero comprendido entre 0 y 10")
+        } else if (imagenUri== null){
+            Log.d("registro", "Imagen de perfil obligatoria")
+            actualizarTextoSnackbar("Debes subir una imagen de perfil")
         } else {
             // Comprobar si el nombre de usuario ya está en uso
             db.collection("usuarios").whereEqualTo("NomUser", textoUsu).get()
@@ -459,42 +526,53 @@ fun registrarUsuario(
                         actualizarErrorUsuario("Usuario existente")
                         Log.w("registro", "documento not null usuario existente")
                     } else {
-                        // Registrar al usuario
-                        auth.createUserWithEmailAndPassword(textoCorreo, textoContra)
-                            .addOnCompleteListener { task2 ->
-                                if (task2.isSuccessful) {
+
+                        val storageReference = FirebaseStorage.getInstance().reference.child("usuarios/${auth.uid}/profile.jpg")
+                        storageReference.putFile(imagenUri).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
                                     Log.d("registro", "Usuario registrado exitosamente")
                                     // El usuario se registró exitosamente
-                                    // Guardar el nombre de usuario en la base de datos
-                                    val usuario = hashMapOf(
-                                        "NomUser" to textoUsu,
-                                        "Localidad" to textoUbi,
-                                        "Correo" to textoCorreo,
-                                        "Nombre" to ("$textoNombre, $textoApellidos"),
-                                        "deportes" to textoDeportes,
-                                        "nivel" to textoNivel
-                                    )
-                                    db.collection("usuarios").document(auth.uid!!)
-                                        .set(usuario)
-                                        .addOnSuccessListener {
-                                            Log.d("registro", "Usuario escrito en el documento con exito")
-
-                                            // Enviar correo de verificación
-                                            auth.currentUser?.sendEmailVerification()
-                                                ?.addOnCompleteListener { task3 ->
-                                                    if (task3.isSuccessful) {
-                                                        Log.d("registro", "Correo de verificación enviado")
-                                                    } else {
-                                                        Log.d("registro", "Error al enviar el correo de verificación")
-                                                        navController.popBackStack()
+                                    // Subir la imagen a Firebase Storage
+                                auth.createUserWithEmailAndPassword(textoCorreo, textoContra)
+                                    .addOnCompleteListener { task2 ->
+                                        if (task2.isSuccessful) {
+                                            Log.d("registro", "Usuario registrado exitosamente")
+                                            storageReference.downloadUrl.addOnSuccessListener { uri ->
+                                                val imagenUrl = uri.toString()
+                                                val usuario = hashMapOf(
+                                                    "NomUser" to textoUsu,
+                                                    "Localidad" to textoUbi,
+                                                    "Correo" to textoCorreo,
+                                                    "Nombre" to ("$textoNombre, $textoApellidos"),
+                                                    "deportes" to textoDeportes,
+                                                    "nivel" to textoNivel,
+                                                    "profileImage" to imagenUrl
+                                                )
+                                                // Guardar usuario en Firestore
+                                                db.collection("usuarios").document(auth.uid!!).set(usuario)
+                                                    .addOnSuccessListener {
+                                                        // Enviar correo de verificación
+                                                        auth.currentUser?.sendEmailVerification()
+                                                            ?.addOnCompleteListener { task3 ->
+                                                                if (task3.isSuccessful) {
+                                                                    Log.d("registro", "Correo de verificación enviado")
+                                                                } else {
+                                                                    Log.d("registro", "Error al enviar el correo de verificación")
+                                                                    navController.popBackStack()
+                                                                }
+                                                            }
+                                                        navController.navigate(route = AppScreens.ScreenVerificacion.route)
                                                     }
-                                                }
-                                            navController.navigate(route = AppScreens.ScreenVerificacion.route)
+                                                    .addOnFailureListener { e ->
+                                                        Log.w("registro", "Error al escribir el usuario en el documento", e)
+                                                        actualizarTextoSnackbar("Error al guardar el usuario")
+                                                    }
+                                            }
+                                        } else {
+                                            Log.d("registro", "Error al subir la imagen")
+                                            actualizarTextoSnackbar("Error al subir la imagen de perfil")
                                         }
-                                        .addOnFailureListener { e ->
-                                            Log.w("registro", "Error al escribir el usuario en el documento", e)
-                                            actualizarTextoSnackbar("Error al guardar el usuario")
-                                        }
+                                    }
                                 } else {
                                     Log.d("registro", "Hubo un error al registrar al usuario")
                                     actualizarTextoSnackbar("Error al realizar el registro")
@@ -502,14 +580,15 @@ fun registrarUsuario(
                             }
                     }
                 }.addOnFailureListener { exception ->
-                    Log.w("registro", "Error getting document", exception)
+                    Log.w("registro", "Error al comprobar el usuario", exception)
                     actualizarTextoSnackbar("Error al comprobar el usuario")
                 }
         }
     } catch (e: Exception) {
-        Log.w("registro", "Excepcion intento registro: ", e)
+        Log.w("registro", "Excepción en intento de registro: ", e)
         actualizarTextoSnackbar("Ha surgido un error en el intento de registro")
     }
+
 }
 
 fun isPasswordStrong(password: String): Boolean {

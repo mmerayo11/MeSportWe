@@ -63,7 +63,6 @@ fun BodyContentInicio(padding: PaddingValues, navController: NavController){
 
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BarraSuperior(titulo: String) {

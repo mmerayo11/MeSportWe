@@ -44,6 +44,9 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+
 
 @Composable
 fun ScreenPerfil(navController: NavController) {
@@ -85,6 +88,8 @@ fun BodyContentPerfil(navController: NavController){
     val niveles = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
     var expanded3 by remember { mutableStateOf(false) }
 
+    val scrollState = rememberScrollState()
+
     LaunchedEffect(textoUsu) {
         try {
             textoUbi = getUbi()
@@ -118,7 +123,7 @@ fun BodyContentPerfil(navController: NavController){
 
     Surface{
         Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 30.dp, vertical = 150.dp),
+            modifier = Modifier.fillMaxSize().verticalScroll(scrollState).padding(horizontal = 30.dp, vertical = 150.dp),
             horizontalAlignment= Alignment.CenterHorizontally
         ) {
 
