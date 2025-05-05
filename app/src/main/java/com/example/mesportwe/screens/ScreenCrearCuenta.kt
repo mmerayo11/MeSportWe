@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Visibility
@@ -67,11 +69,9 @@ fun BodyContentCC(navController: NavController){
     var textoContra by remember { mutableStateOf("") }
     var textoContra2 by remember { mutableStateOf("") }
     var textoCorreo by remember { mutableStateOf("") }
-    var textoUbi by remember { mutableStateOf("") }
     var textoNombre by remember { mutableStateOf("") }
     var textoApellidos by remember { mutableStateOf("") }
-    var textoDeportes by remember { mutableStateOf("") }
-    var textoNivel by remember { mutableStateOf("") }
+    var textoDescripcion by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
     var passVisible by remember { mutableStateOf(false) }
     var confPassVisible by remember { mutableStateOf(false) }
@@ -84,6 +84,7 @@ fun BodyContentCC(navController: NavController){
     var textoErrorApellidos by remember { mutableStateOf("") }
     var textoErrorDeportes by remember { mutableStateOf("") }
     var textoErrorNivel by remember { mutableStateOf("") }
+    var textoErrorDescripcion by remember { mutableStateOf("") }
     val focusRequester1 = remember { FocusRequester() }
     val focusRequester2 = remember { FocusRequester() }
     val focusRequester3 = remember { FocusRequester() }
@@ -112,10 +113,11 @@ fun BodyContentCC(navController: NavController){
     val niveles = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
     var nivelElegido by remember { mutableStateOf(niveles[0]) }
     var expanded3 by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     Surface {
         Column(
-            modifier = Modifier.fillMaxSize().padding(6.dp),
+            modifier = Modifier.fillMaxSize().verticalScroll(scrollState).padding(6.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -331,17 +333,30 @@ fun BodyContentCC(navController: NavController){
                 }
             }
 
+            OutlinedTextField(
+                value = textoDescripcion,
+                onValueChange = { textoDescripcion = it },
+                label = { Text("Descripción(Este campo no es obligatorio)") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = { focusRequester7.requestFocus() }),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
+            )
+
             Button(onClick = {
                 registrarUsuario(
                     textoUsu.trim(),
                     textoCorreo.trim(),
                     textoContra.trim(),
                     textoContra2.trim(),
-                    textoUbi.trim(),
+                    ciudadElegida.trim(),
                     textoNombre.trim(),
                     textoApellidos.trim(),
-                    textoDeportes.trim(),
-                    textoNivel.trim(),
+                    deporteElegido.trim(),
+                    nivelElegido.trim(),
+                    textoDescripcion.trim(),
                     navController,
                     context,
                     { nuevoMensaje -> textoErrorUsuario = nuevoMensaje },
@@ -353,6 +368,7 @@ fun BodyContentCC(navController: NavController){
                     { nuevoMensaje -> textoErrorApellidos = nuevoMensaje },
                     { nuevoMensaje -> textoErrorDeportes = nuevoMensaje },
                     { nuevoMensaje -> textoErrorNivel = nuevoMensaje },
+                    { nuevoMensaje -> textoErrorDescripcion = nuevoMensaje },
                     { nuevoMensaje -> textoSnackbar = nuevoMensaje },
                 )
             }) {
@@ -377,6 +393,7 @@ fun registrarUsuario(
     textoApellidos: String,
     textoDeportes: String,
     textoNivel: String,
+    textoDescripcion: String,
     navController: NavController,
     context: Context,
     actualizarErrorUsuario: (String) -> Unit,
@@ -388,6 +405,7 @@ fun registrarUsuario(
     actualizarErrorApellidos: (String) -> Unit,
     actualizarErrorDeportes: (String) -> Unit,
     actualizarErrorNivel: (String) -> Unit,
+    actualizarErrorDescripcion: (String) -> Unit,
     actualizarTextoSnackbar: (String) -> Unit,
 ) {
     val auth = Firebase.auth
@@ -401,6 +419,7 @@ fun registrarUsuario(
     actualizarErrorApellidos("")
     actualizarErrorDeportes("")
     actualizarErrorNivel("")
+    actualizarErrorDescripcion("")
     actualizarTextoSnackbar("")
 
     Log.w("registro", "Inicio de registro")
@@ -417,7 +436,7 @@ fun registrarUsuario(
         }
 
         if (textoUsu.isEmpty() || textoCorreo.isEmpty() || textoContra.isEmpty() || textoContra2.isEmpty() || textoUbi.isEmpty() || textoNombre.isEmpty() || textoApellidos.isEmpty() || textoDeportes.isEmpty() || textoNivel.isEmpty()) {
-            Log.d("registro", "Todos los campos deben estar rellenos")
+            Log.d("registro", "Todos estos campos deben estar rellenos")
             if (textoUsu.isEmpty()) {
                 actualizarErrorUsuario("Este campo es obligatorio")
             } else if (textoCorreo.isEmpty()) {
@@ -451,6 +470,9 @@ fun registrarUsuario(
         } else if (!isLevelValid(textoNivel)){
             Log.d("registro", "Nivel no válido")
             actualizarErrorNivel("El nivel no es un entero comprendido entre 0 y 10")
+        } else if (!isDescriptionValid(textoDescripcion)){
+            Log.d("registro", "Descripcion muy extensa")
+            actualizarErrorDescripcion("La descripción debe tener menos de 100 caracteres")
         } else {
             // Comprobar si el nombre de usuario ya está en uso
             db.collection("usuarios").whereEqualTo("NomUser", textoUsu).get()
@@ -472,7 +494,8 @@ fun registrarUsuario(
                                         "Correo" to textoCorreo,
                                         "Nombre" to ("$textoNombre, $textoApellidos"),
                                         "deportes" to textoDeportes,
-                                        "nivel" to textoNivel
+                                        "nivel" to textoNivel,
+                                        "Descripcion" to textoDescripcion
                                     )
                                     db.collection("usuarios").document(auth.uid!!)
                                         .set(usuario)
@@ -525,6 +548,10 @@ fun isPasswordStrong(password: String): Boolean {
     )
     val matcher = passwordPattern.matcher(password)
     return matcher.matches()
+}
+
+fun isDescriptionValid(descripcion: String): Boolean {
+    return descripcion.length <100
 }
 
 fun isEmailValid(email: String): Boolean {

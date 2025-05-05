@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,6 +61,7 @@ fun BodyContentPerfil(navController: NavController){
     var textoNombre by remember { mutableStateOf("") }
     var textoDeportes by remember { mutableStateOf("") }
     var textoNivel by remember { mutableStateOf("") }
+    var textoDescripcion by remember { mutableStateOf("") }
     var textosActivos by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val sessionManager = SessionManager(LocalContext.current)
@@ -68,6 +72,7 @@ fun BodyContentPerfil(navController: NavController){
     var textoErrorUbi by remember { mutableStateOf("") }
     var textoErrorDeporte by remember { mutableStateOf("") }
     var textoErrorNivel by remember { mutableStateOf("") }
+    var textoErrorDescripcion by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     val ciudades = listOf(
         "A Coruña","Albacete", "Alicante", "Almería", "Ávila", "Badajoz", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Castellón de la Plana",
@@ -84,6 +89,7 @@ fun BodyContentPerfil(navController: NavController){
 
     val niveles = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
     var expanded3 by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(textoUsu) {
         try {
@@ -113,12 +119,19 @@ fun BodyContentPerfil(navController: NavController){
             Log.e("Firestore", "Error obteniendo el nivel", e)
             textoNivel = "Nivel no disponible" // Valor por defecto para evitar fallos
         }
+
+        try {
+            textoDescripcion = getDescripcion()
+        } catch (e: Exception) {
+            Log.e("Firestore", "Error obteniendo la descripción", e)
+            textoNivel = "Descripción no disponible" // Valor por defecto para evitar fallos
+        }
     }
 
 
     Surface{
         Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 30.dp, vertical = 150.dp),
+            modifier = Modifier.fillMaxSize().verticalScroll(scrollState).padding(horizontal = 30.dp, vertical = 150.dp),
             horizontalAlignment= Alignment.CenterHorizontally
         ) {
 
@@ -245,6 +258,15 @@ fun BodyContentPerfil(navController: NavController){
                 }
             }
 
+            OutlinedTextField(
+                enabled = textosActivos,
+                value = textoDescripcion,
+                onValueChange = { if (it.length <= 100) textoDescripcion = it },
+                label = { Text("Descripción") },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                modifier = Modifier.fillMaxWidth().heightIn(min=56.dp),
+            )
+
             Spacer(modifier = Modifier.height(24.dp))
 
             HorizontalDivider(
@@ -261,10 +283,12 @@ fun BodyContentPerfil(navController: NavController){
                         textoUbi.trim(),
                         textoDeportes.trim(),
                         textoNivel.trim(),
+                        textoDescripcion.trim(),
                         { nuevoMensaje -> textoErrorUsuario = nuevoMensaje },
                         { nuevoMensaje -> textoErrorUbi = nuevoMensaje },
                         { nuevoMensaje -> textoErrorDeporte = nuevoMensaje },
                         { nuevoMensaje -> textoErrorNivel = nuevoMensaje },
+                        { nuevoMensaje -> textoErrorDescripcion = nuevoMensaje },
                         { nuevoMensaje -> textoSnackbar = nuevoMensaje },
                     )
                 }
@@ -368,15 +392,25 @@ suspend fun getNivel(): String {
     return nivel
 }
 
+suspend fun getDescripcion(): String {
+    val db = Firebase.firestore
+    val uid = Firebase.auth.currentUser?.uid
+    val userDocument = db.collection("usuarios").document(uid!!).get().await()
+    val descripcion = userDocument.get("Descripcion") as String
+    return descripcion
+}
+
 fun cambioDatos(
     usuario: String,
     ubicacion: String,
     deporte: String,
     nivel: String,
+    descripcion: String,
     actualizarErrorUsuario: (String) -> Unit,
     actualizarErrorUbi: (String) -> Unit,
     actualizarErrorDeportes: (String) -> Unit,
     actualizarErrorNivel: (String) -> Unit,
+    actualizarErrorDescripcion: (String) ->Unit,
     actualizarTextoSnackbar: (String) -> Unit,
     )   {
     val auth = com.google.firebase.Firebase.auth
@@ -387,6 +421,7 @@ fun cambioDatos(
     actualizarErrorUbi("")
     actualizarErrorDeportes("")
     actualizarErrorNivel("")
+    actualizarErrorDescripcion("")
     actualizarTextoSnackbar("")
 
     try{
@@ -401,6 +436,9 @@ fun cambioDatos(
             } else if (nivel.isEmpty()) {
                 actualizarErrorNivel("Este campo es obligatorio")
             }
+        } else if (!isDescriptionValid(descripcion)){
+            Log.d("registro", "Descripcion muy extensa")
+            actualizarErrorDescripcion("La descripción debe tener menos de 100 caracteres")
         }
         else {
             val userRef = uid?.let { db.collection("usuarios").document(it) }
@@ -423,7 +461,8 @@ fun cambioDatos(
                                         "NomUser" to usuario,
                                         "Localidad" to ubicacion,
                                         "deportes" to deporte,
-                                        "nivel" to nivel
+                                        "nivel" to nivel,
+                                        "Descripcion" to descripcion
                                     )
                                 )
                                     .addOnSuccessListener {
