@@ -23,17 +23,15 @@ import com.google.firebase.auth.FirebaseAuth
 fun AppNavigation(){
 
     val navController = rememberNavController()
+    val user = FirebaseAuth.getInstance().currentUser
     val mostrarBarra = remember { mutableStateOf(false) }
-    var pantallaInicio = AppScreens.ScreenInicioSesion.route
-    val firebaseAuth : FirebaseAuth = FirebaseAuth.getInstance()
-    firebaseAuth.addAuthStateListener { auth ->
-        val firebaseUser = firebaseAuth.currentUser
-        if (firebaseUser != null) {
-            pantallaInicio = AppScreens.ScreenInicioSesion.route
-        } else {
-            pantallaInicio = AppScreens.ScreenInicio.route
-        }
+
+    var pantallaInicio = if (user != null){
+        AppScreens.ScreenInicio.route
+    } else {
+        AppScreens.ScreenInicioSesion.route
     }
+
     Scaffold(
         bottomBar = { if (mostrarBarra.value) BarraInferior(navController) },
         topBar = {if (mostrarBarra.value) BarraSuperior("")}
