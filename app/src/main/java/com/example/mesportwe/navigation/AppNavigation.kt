@@ -16,6 +16,8 @@ import com.example.mesportwe.screens.ScreenInicioSesion
 import com.example.mesportwe.screens.ScreenPerfil
 import com.example.mesportwe.screens.ScreenVerificacion
 import com.example.mesportwe.screens.ScreenCambioContra
+import com.example.mesportwe.screens.ScreenChat
+import com.example.mesportwe.screens.ScreenMensajes
 import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -60,6 +62,14 @@ fun AppNavigation(){
             composable(route = AppScreens.ScreenCambioContra.route){
                 mostrarBarra.value = false
                 ScreenCambioContra(navController)
+            }
+            composable(route = AppScreens.ScreenMensajes.route){
+                mostrarBarra.value = false
+                ScreenMensajes(navController)
+            }
+            composable(route = AppScreens.ScreenChat.route){
+                mostrarBarra.value = false
+                ScreenChat(navController)
             }
         }
     }

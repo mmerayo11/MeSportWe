@@ -7,4 +7,6 @@ sealed class AppScreens(val route : String) {
     object ScreenInicio: AppScreens("screen_inicio")
     object ScreenPerfil: AppScreens("screen_perfil")
     object ScreenCambioContra: AppScreens("screen_cambio_contra")
+    object ScreenMensajes: AppScreens("screen_mensajes")
+    object ScreenChat: AppScreens("screen_chat")
 }
