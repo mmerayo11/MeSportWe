@@ -1,6 +1,7 @@
 package com.example.mesportwe.screens
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -22,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -54,6 +57,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -109,7 +113,19 @@ fun BodyContentInicio(padding: PaddingValues, navController: NavController) {
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                 )
 
-                Button(onClick = {}) {
+                val coroutineScope = rememberCoroutineScope()
+
+                Button(onClick = {
+                    coroutineScope.launch {
+                        try {
+                            val chatId = chatNuevo(usuario.nomUser,usuario.deporte)
+                            navController.navigate("ScreenChat/$chatId")
+                        } catch (e: Exception){
+                            Log.e("chat", "Error al crear chat")
+                        }
+                    }
+
+                }) {
                     Text("ENVIAR MENSAJE")
                 }
 
@@ -145,11 +161,14 @@ fun BodyContentInicio(padding: PaddingValues, navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BarraSuperior(titulo: String) {
-    var t = titulo.trim()
-    if(t == ""){
-        t = "Me.Sport.We"
-    }
+fun BarraSuperior(
+    titulo: String,
+    navController: NavController? = null,
+    mostrarFlecha: Boolean = false,
+    destinoAlVolver: String? = null
+) {
+    val t = titulo.trim().ifEmpty { "Me.Sport.We" }
+
     Column {
         TopAppBar(
             title = {
@@ -159,17 +178,31 @@ fun BarraSuperior(titulo: String) {
                     fontWeight = FontWeight.Bold,
                     color = colorScheme.primary,
                 )
+            },
+            navigationIcon = {
+                if (mostrarFlecha && navController != null && destinoAlVolver != null) {
+                    IconButton(onClick = { navController.navigate(destinoAlVolver) }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Volver",
+                            tint = colorScheme.primary
+                        )
+                    }
+                } else {
+                    null
+                }
             }
         )
         HorizontalDivider(thickness = 1.dp)
     }
 }
 
+
 @Composable
 fun BarraInferior(navController: NavController) {
     val items = listOf(
         BottomNavigationItem("Inicio", Icons.Filled.Home, Icons.Outlined.Home),
-        BottomNavigationItem("Chat", Icons.AutoMirrored.Filled.Chat, Icons.AutoMirrored.Outlined.Chat),
+        BottomNavigationItem("Mensajes", Icons.AutoMirrored.Filled.Chat, Icons.AutoMirrored.Outlined.Chat),
         BottomNavigationItem("Ubicaciones", Icons.Default.Favorite, Icons.Default.FavoriteBorder),
         BottomNavigationItem("Perfil", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
     )
@@ -180,7 +213,7 @@ fun BarraInferior(navController: NavController) {
     LaunchedEffect(currentRoute) {
         when (currentRoute) {
             "item_inicio" -> selectedItemIndex = 0
-            "item_chat" -> selectedItemIndex = 1
+            "item_mensajes" -> selectedItemIndex = 1
             "item_favoritos" -> selectedItemIndex = 2
             "item_perfil" -> selectedItemIndex = 3
         }
@@ -245,6 +278,32 @@ suspend fun obtenerDatosUser(nomUser: String): Usuario {
         nivel = documento.getString("nivel") ?: "",
         descripcion = documento.getString("Descripcion") ?: "",
     )
+}
+
+suspend fun chatNuevo(usu2: String, deporte: String): String{
+    val db = Firebase.firestore
+    val auth = Firebase.auth
+    val uid = auth.currentUser?.uid ?: throw Exception("Usuario no autenticado")
+
+    val userDocument = db.collection("usuarios").document(uid).get().await()
+    val usu1 = userDocument.get("NomUser") as String
+    val usuarios = listOf(usu1,usu2).sorted()
+    val chatId = usuarios.joinToString("_") + "_$deporte"
+
+    val chatRef = db.collection("chats").document(chatId)
+    val doc = chatRef.get().await()
+
+    if (!doc.exists()){
+        val data =
+            mapOf(
+                "usuarios" to usuarios,
+                "deporte" to deporte,
+                "ultimoMsj" to "",
+                "fecha" to FieldValue.serverTimestamp()
+            )
+        chatRef.set(data).await()
+    }
+    return chatId
 }
 
 data class Usuario(

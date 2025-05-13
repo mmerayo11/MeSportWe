@@ -5,9 +5,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.mesportwe.screens.BarraInferior
 import com.example.mesportwe.screens.BarraSuperior
 import com.example.mesportwe.screens.ScreenCrearCuenta
@@ -64,12 +66,16 @@ fun AppNavigation(){
                 ScreenCambioContra(navController)
             }
             composable(route = AppScreens.ScreenMensajes.route){
-                mostrarBarra.value = false
+                mostrarBarra.value = true
                 ScreenMensajes(navController)
             }
-            composable(route = AppScreens.ScreenChat.route){
+            composable(
+                route = "ScreenChat/{chatId}",
+                arguments = listOf(navArgument("chatId") { type = NavType.StringType })
+            ) { backStackEntry ->
                 mostrarBarra.value = false
-                ScreenChat(navController)
+                val chatId = backStackEntry.arguments?.getString("chatId") ?: return@composable
+                ScreenChat(navController, chatId)
             }
         }
     }

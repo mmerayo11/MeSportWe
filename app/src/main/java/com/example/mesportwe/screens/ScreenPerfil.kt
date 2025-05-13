@@ -461,14 +461,45 @@ fun cambioDatos(
                                         "Descripcion" to descripcion
                                     )
                                 )
-                                    .addOnSuccessListener {
-                                        actualizarTextoSnackbar("Modificado con éxito")
-                                        Log.d("modificacion", "Datos actualizados correctamente")
+                                .addOnSuccessListener {
+                                    actualizarTextoSnackbar("Modificado con éxito")
+                                    Log.d("modificacion", "Datos actualizados correctamente")
+
+                                    if(oldUser != usuario) {
+                                        db.collection("chats")
+                                            .whereArrayContains("usuarios", oldUser)
+                                            .get()
+                                            .addOnSuccessListener { chats ->
+                                                for (chatDoc in chats) {
+                                                    val chatData = chatDoc.data.toMutableMap()
+                                                    val usuarios = (chatData["usuarios"] as List<*>)
+                                                        .map {it.toString()}
+                                                        .map { u -> if (u == oldUser) usuario else u
+                                                    }.sorted()
+
+                                                    val deporteR = chatData["deporte"] as? String ?: "general"
+                                                    val newChatId = usuarios.joinToString("_") + "_$deporteR"
+                                                    val newChatRef = db.collection("chats").document(newChatId)
+
+                                                    chatData["usuarios"] = usuarios
+
+                                                    newChatRef.set(chatData)
+                                                        .addOnSuccessListener {
+                                                            chatDoc.reference.delete()
+                                                            Log.d("modificacion", "Chat $newChatId creado y ${chatDoc.id} eliminado")
+                                                         }
+
+                                                        .addOnFailureListener() {
+                                                            Log.w("modificacion", "Error al crear nuevo chat $newChatId")
+                                                        }
+                                                }
+                                            }
                                     }
-                                    .addOnFailureListener {
-                                        Log.w("modificacion", "Error al actualizar los datos")
-                                        actualizarTextoSnackbar("Error al actualizar los datos")
-                                    }
+                                }
+                                .addOnFailureListener {
+                                    Log.w("modificacion", "Error al actualizar los datos")
+                                    actualizarTextoSnackbar("Error al actualizar los datos")
+                                }
                             }
                         }
                         .addOnFailureListener {
