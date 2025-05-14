@@ -101,4 +101,6 @@ dependencies {
 
     implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.0.2")
     implementation("com.maxkeppeler.sheets-compose-dialogs:clock:1.0.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+
 }

@@ -200,12 +200,6 @@ fun BarraSuperior(
 
 @Composable
 fun BarraInferior(navController: NavController) {
-    val items = listOf(
-        BottomNavigationItem("Inicio", Icons.Filled.Home, Icons.Outlined.Home),
-        BottomNavigationItem("Mensajes", Icons.AutoMirrored.Filled.Chat, Icons.AutoMirrored.Outlined.Chat),
-        BottomNavigationItem("Ubicaciones", Icons.Default.Favorite, Icons.Default.FavoriteBorder),
-        BottomNavigationItem("Perfil", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
-    )
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
     val backStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry.value?.destination?.route
@@ -216,20 +210,46 @@ fun BarraInferior(navController: NavController) {
             "item_mensajes" -> selectedItemIndex = 1
             "item_favoritos" -> selectedItemIndex = 2
             "item_perfil" -> selectedItemIndex = 3
+            else -> selectedItemIndex
         }
     }
 
+    data class BottomNavItem(
+        val titulo: String,
+        val route: String,
+        val selecIcon: ImageVector,
+        val unselecIcon: ImageVector
+    )
+
+    val items = listOf(
+        BottomNavItem("Inicio", "screen_inicio", Icons.Filled.Home, Icons.Outlined.Home),
+        BottomNavItem("Mensajes", "screen_mensajes", Icons.AutoMirrored.Filled.Chat, Icons.AutoMirrored.Outlined.Chat),
+        BottomNavItem("Ubicaciones", "screen_favoritos", Icons.Default.Favorite, Icons.Default.FavoriteBorder),
+        BottomNavItem("Perfil", "screen_perfil", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
+    )
+
     NavigationBar {
-        items.forEachIndexed { index, item ->
+        items.forEach { item ->
+            val selected = currentRoute == item.route
             NavigationBarItem(
                 icon = {
-                    Icon(imageVector = if (index == selectedItemIndex){item.selecIcon} else item.unselecIcon, contentDescription = item.titulo)
+                    Icon(
+                        imageVector = if (selected) item.selecIcon else item.unselecIcon,
+                        contentDescription = item.titulo
+                    )
                 },
-                label = { Text(text = item.titulo) },
-                selected = selectedItemIndex == index,
+                label = { Text(item.titulo) },
+                selected = selected,
                 onClick = {
-                    selectedItemIndex = index
-                    navController.navigate("screen_" + item.titulo.lowercase())
+                    if (currentRoute != item.route) {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
                 }
             )
         }
