@@ -110,7 +110,7 @@ fun BodyContentCC(navController: NavController){
     var deporteElegido by remember { mutableStateOf(deportes[0]) }
     var expanded2 by remember { mutableStateOf(false) }
 
-    val niveles = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
+    val niveles = listOf("principiante", "aficionado", "intermedio", "avanzado", "competitivo")
     var nivelElegido by remember { mutableStateOf(niveles[0]) }
     var expanded3 by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
