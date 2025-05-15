@@ -89,6 +89,16 @@ fun BodyContentInicio(padding: PaddingValues, navController: NavController) {
             listaUsuarios = usuarios.drop(1)
             usuarioActual = datos
         }
+        else {
+            usuarioActual= Usuario(
+                nomUser = "No hay usuarios disponibles en este momento",
+                nombre = "",
+                localidad = "",
+                deporte = "",
+                nivel = "",
+                descripcion = ""
+            )
+        }
     }
 
     Surface {
@@ -106,53 +116,53 @@ fun BodyContentInicio(padding: PaddingValues, navController: NavController) {
                 Text(text = "${usuario.deporte}, ${usuario.nivel}", color = colorScheme.secondary)
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(text = usuario.descripcion, color = colorScheme.secondary)
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(60.dp))
 
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-                )
+                if (usuario.nomUser != "No hay usuarios disponibles en este momento") {
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                    )
 
-                val coroutineScope = rememberCoroutineScope()
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                Button(onClick = {
-                    coroutineScope.launch {
-                        try {
-                            val chatId = chatNuevo(usuario.nomUser,usuario.deporte)
-                            navController.navigate("ScreenChat/$chatId")
-                        } catch (e: Exception){
-                            Log.e("chat", "Error al crear chat")
+                    Button(onClick = {
+                        coroutineScope.launch {
+                            try {
+                                val chatId = chatNuevo(usuario.nomUser, usuario.deporte)
+                                navController.navigate("ScreenChat/$chatId")
+                            } catch (e: Exception) {
+                                Log.e("chat", "Error al crear chat")
+                            }
                         }
+                    }) {
+                        Text("ENVIAR MENSAJE")
                     }
 
-                }) {
-                    Text("ENVIAR MENSAJE")
-                }
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                Button(onClick = {
-                    coroutineScope.launch {
-                        if (listaUsuarios.isNotEmpty()) {
-                            val siguienteUsuario = listaUsuarios.first()
-                            val datos = obtenerDatosUser(siguienteUsuario)
-                            listaUsuarios = listaUsuarios.drop(1)
-                            usuarioActual=datos
+                    Button(onClick = {
+                        coroutineScope.launch {
+                            if (listaUsuarios.isNotEmpty()) {
+                                val siguienteUsuario = listaUsuarios.first()
+                                val datos = obtenerDatosUser(siguienteUsuario)
+                                listaUsuarios = listaUsuarios.drop(1)
+                                usuarioActual = datos
+                            } else {
+                                usuarioActual = Usuario(
+                                    nomUser = "No hay usuarios disponibles en este momento",
+                                    nombre = "",
+                                    localidad = "",
+                                    deporte = "",
+                                    nivel = "",
+                                    descripcion = ""
+                                )
+                            }
                         }
-                        else {
-                            usuarioActual= Usuario(
-                                nomUser = "No hay usuarios disponibles en este momento",
-                                nombre = "",
-                                localidad = "",
-                                deporte = "",
-                                nivel = "",
-                                descripcion = ""
-                            )
-                        }
+                    }) {
+                        Text("SIGUIENTE USUARIO")
                     }
-
-                }) {
-                    Text("SIGUIENTE USUARIO")
                 }
-
             }
         }
     }
@@ -264,8 +274,9 @@ suspend fun encontrarUsuarios(): List<String> {
     val usuarioActual = db.collection("usuarios").document(uid).get().await()
     val deporte = usuarioActual.getString("deportes")
     val ubicacion = usuarioActual.getString("Localidad")
+    val usernameActual = usuarioActual.getString("NomUser")
 
-    if(deporte == null || ubicacion == null) return emptyList()
+    if(deporte == null || ubicacion == null || usernameActual == null) return emptyList()
 
     val usuariosCompatibles = mutableListOf<String>()
 
@@ -277,13 +288,28 @@ suspend fun encontrarUsuarios(): List<String> {
 
     for (document in querySnapshot.documents){
         val userId = document.id
+        val nombreOtroUsuario = document.getString("NomUser") ?: continue
+
         if (userId != uid) {
-            val usuario = document.getString("NomUser")?: "Sin nombre"
-            usuariosCompatibles.add(usuario)
+            val chatExistente = db.collection("chats")
+                .whereEqualTo("deporte", deporte)
+                .whereArrayContains("usuarios", usernameActual)
+                .get()
+                .await()
+                .documents
+                .any { chatDoc ->
+                    val usuariosChat = chatDoc.get("usuarios") as? List<*>
+                    usuariosChat?.contains(nombreOtroUsuario) == true
+                }
+
+            if (!chatExistente) {
+                usuariosCompatibles.add(nombreOtroUsuario)
+            }
         }
     }
     return usuariosCompatibles
 }
+
 
 suspend fun obtenerDatosUser(nomUser: String): Usuario {
     val db = Firebase.firestore
