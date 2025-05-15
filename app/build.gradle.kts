@@ -71,6 +71,8 @@ dependencies {
     // cambiar barra de tareas
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.storage)
+    implementation(libs.firebase.vertexai)
     //implementation(libs.firebase.auth.ktx)
     //implementation(libs.firebase.perf.ktx)
     // ocultar top bar
