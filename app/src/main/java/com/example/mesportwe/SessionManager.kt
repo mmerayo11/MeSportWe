@@ -25,4 +25,11 @@ class SessionManager(context: Context) {
         editor.clear()
         editor.apply()
     }
+
+    fun updateUsername(newUsername: String) {
+        val editor = prefs.edit()
+        editor.putString("Username", newUsername)
+        editor.apply()
+    }
+
 }

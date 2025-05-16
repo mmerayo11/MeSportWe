@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +38,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mesportwe.SessionManager
 import com.example.mesportwe.navigation.AppScreens
 import com.example.mesportwe.ui.theme.MeSportWeTheme
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.firestore
@@ -53,77 +56,69 @@ fun ScreenPerfil(navController: NavController) {
 @Composable
 fun BodyContentPerfil(navController: NavController){
 
+    val context = LocalContext.current
+    val sessionManager = SessionManager(context)
+    val user = sessionManager.getUserDetails()
+
+    var textoUsu by remember { mutableStateOf(user["username"] ?: "") }
+    var textoCorreo by remember { mutableStateOf(user["email"] ?: "") }
     var textoUbi by remember { mutableStateOf("") }
     var textoNombre by remember { mutableStateOf("") }
     var textoDeportes by remember { mutableStateOf("") }
     var textoNivel by remember { mutableStateOf("") }
     var textoDescripcion by remember { mutableStateOf("") }
-    var textosActivos by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    val sessionManager = SessionManager(LocalContext.current)
-    val user = sessionManager.getUserDetails()
-    var textoUsu by remember { mutableStateOf(user["username"] ?: "") }
-    var textoCorreo by remember { mutableStateOf(user["email"] ?: "") }
+
     var textoErrorUsuario by remember { mutableStateOf("") }
     var textoErrorUbi by remember { mutableStateOf("") }
     var textoErrorDeporte by remember { mutableStateOf("") }
     var textoErrorNivel by remember { mutableStateOf("") }
     var textoErrorDescripcion by remember { mutableStateOf("") }
+    var textoSnackbar by remember { mutableStateOf("") }
+
+    var textosActivos by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
+    var expanded2 by remember { mutableStateOf(false) }
+    var expanded3 by remember { mutableStateOf(false) }
+
+    val scrollState = rememberScrollState()
+
     val ciudades = listOf(
-        "A Coruña","Albacete", "Alicante", "Almería", "Ávila", "Badajoz", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Castellón de la Plana",
+        "A Coruña", "Albacete", "Alicante", "Almería", "Ávila", "Badajoz", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Castellón de la Plana",
         "Ceuta", "Ciudad Real", "Córdoba", "Cuenca", "Girona", "Granada", "Guadalajara", "Huelva", "Huesca", "Jaén", "Las Palmas de Gran Canaria",
         "León", "Lleida", "Logroño", "Lugo", "Madrid", "Málaga", "Melilla", "Murcia", "Ourense", "Oviedo", "Palencia", "Palma de Mallorca", "Pamplona",
-        "Pontevedra", "Salamanca", "San Sebastián", "Santa Cruz de Tenerife", "Santander", "Segovia", "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vitoria", "Zamora", "Zaragoza")
-    var textoSnackbar by remember { mutableStateOf("") }
+        "Pontevedra", "Salamanca", "San Sebastián", "Santa Cruz de Tenerife", "Santander", "Segovia", "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vitoria", "Zamora", "Zaragoza"
+    )
 
     val deportes = listOf(
         "Atletismo", "Baloncesto", "Balonmano", "Ciclismo", "Fútbol", "Gimnasia", "Golf", "Judo",
         "Natación", "Pádel", "Patinaje", "Piragüismo", "Rugby", "Tenis", "Voleibol"
     )
-    var expanded2 by remember { mutableStateOf(false) }
 
     val niveles = listOf("principiante", "aficionado", "intermedio", "avanzado", "competitivo")
-    var expanded3 by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
 
-    LaunchedEffect(textoUsu) {
-        try {
-            textoUbi = getUbi()
-        } catch (e: Exception) {
-            Log.e("Firestore", "Error obteniendo la ubicación", e)
-            textoUbi = "Ubicación no disponible" // Valor por defecto para evitar fallos
-        }
+    val db = Firebase.firestore
+    val currentUser = Firebase.auth.currentUser
 
-        try {
-            textoNombre = getNombre()
-        } catch (e: Exception) {
-            Log.e("Firestore", "Error obteniendo el nombre", e)
-            textoNombre = "Nombre no disponible" // Valor por defecto para evitar fallos
-        }
+    LaunchedEffect(currentUser?.uid) {
+        currentUser?.uid?.let { uid ->
+            db.collection("usuarios").document(uid)
+                .addSnapshotListener { snapshot, e ->
+                    if (e != null) {
+                        Log.e("Firestore", "Error escuchando cambios", e)
+                        return@addSnapshotListener
+                    }
 
-        try {
-            textoDeportes = getDeporte()
-        } catch (e: Exception) {
-            Log.e("Firestore", "Error obteniendo el deporte", e)
-            textoDeportes = "Deporte no disponible" // Valor por defecto para evitar fallos
-        }
-
-        try {
-            textoNivel = getNivel()
-        } catch (e: Exception) {
-            Log.e("Firestore", "Error obteniendo el nivel", e)
-            textoNivel = "Nivel no disponible" // Valor por defecto para evitar fallos
-        }
-
-        try {
-            textoDescripcion = getDescripcion()
-        } catch (e: Exception) {
-            Log.e("Firestore", "Error obteniendo la descripción", e)
-            textoNivel = "Descripción no disponible" // Valor por defecto para evitar fallos
+                    snapshot?.let {
+                        textoUsu = it.getString("NomUser") ?: ""
+                        textoUbi = it.getString("Localidad") ?: ""
+                        textoNombre = it.getString("Nombre") ?: ""
+                        textoDeportes = it.getString("deportes") ?: ""
+                        textoNivel = it.getString("nivel") ?: ""
+                        textoDescripcion = it.getString("Descripcion") ?: ""
+                    }
+                }
         }
     }
-
 
     Surface{
         Column(
@@ -286,6 +281,7 @@ fun BodyContentPerfil(navController: NavController){
                         { nuevoMensaje -> textoErrorNivel = nuevoMensaje },
                         { nuevoMensaje -> textoErrorDescripcion = nuevoMensaje },
                         { nuevoMensaje -> textoSnackbar = nuevoMensaje },
+                        sessionManager
                     )
                 }
                 textosActivos = !textosActivos
@@ -408,6 +404,7 @@ fun cambioDatos(
     actualizarErrorNivel: (String) -> Unit,
     actualizarErrorDescripcion: (String) ->Unit,
     actualizarTextoSnackbar: (String) -> Unit,
+    sessionManager: SessionManager
     )   {
     val auth = com.google.firebase.Firebase.auth
     val db = com.google.firebase.Firebase.firestore
@@ -465,36 +462,60 @@ fun cambioDatos(
                                     actualizarTextoSnackbar("Modificado con éxito")
                                     Log.d("modificacion", "Datos actualizados correctamente")
 
-                                    if(oldUser != usuario) {
+                                    if (oldUser != usuario) {
+                                        sessionManager.updateUsername(usuario)
+                                        val db = Firebase.firestore
+
                                         db.collection("chats")
                                             .whereArrayContains("usuarios", oldUser)
                                             .get()
-                                            .addOnSuccessListener { chats ->
-                                                for (chatDoc in chats) {
-                                                    val chatData = chatDoc.data.toMutableMap()
-                                                    val usuarios = (chatData["usuarios"] as List<*>)
-                                                        .map {it.toString()}
-                                                        .map { u -> if (u == oldUser) usuario else u
-                                                    }.sorted()
+                                            .addOnSuccessListener { chatsSnapshot ->
 
-                                                    val deporteR = chatData["deporte"] as? String ?: "general"
-                                                    val newChatId = usuarios.joinToString("_") + "_$deporteR"
-                                                    val newChatRef = db.collection("chats").document(newChatId)
+                                                chatsSnapshot.documents.forEach { chatDoc ->
+                                                    val chatData = chatDoc.data?.toMutableMap() ?: mutableMapOf()
+
+                                                    val usuarios = (chatData["usuarios"] as? List<*>)?.map { it.toString() }?.map { u ->
+                                                        if (u == oldUser) usuario else u
+                                                    }?.sorted() ?: listOf(usuario)
 
                                                     chatData["usuarios"] = usuarios
 
-                                                    newChatRef.set(chatData)
-                                                        .addOnSuccessListener {
-                                                            chatDoc.reference.delete()
-                                                            Log.d("modificacion", "Chat $newChatId creado y ${chatDoc.id} eliminado")
-                                                         }
+                                                    val deporte = chatData["deporte"] as? String ?: "general"
+                                                    val newChatId = usuarios.joinToString("_") + "_$deporte"
 
-                                                        .addOnFailureListener() {
-                                                            Log.w("modificacion", "Error al crear nuevo chat $newChatId")
+                                                    val newChatRef = db.collection("chats").document(newChatId)
+                                                    val oldChatRef = chatDoc.reference
+
+                                                    oldChatRef.collection("mensajes").get()
+                                                        .addOnSuccessListener { mensajesSnapshot ->
+                                                            val batch = db.batch()
+
+                                                            mensajesSnapshot.documents.forEach { mensajeDoc ->
+                                                                val mensajeData = mensajeDoc.data?.toMutableMap() ?: return@forEach
+                                                                if (mensajeData["emisor"] == oldUser) {
+                                                                    mensajeData["emisor"] = usuario
+                                                                }
+                                                                val newMensajeRef = newChatRef.collection("mensajes").document()
+                                                                batch.set(newMensajeRef, mensajeData)
+                                                            }
+
+                                                            batch.set(newChatRef, chatData)
+                                                            batch.delete(oldChatRef)
+
+                                                            batch.commit()
+                                                                .addOnSuccessListener {
+                                                                    Log.d("CambioNombre", "Chats actualizados correctamente")
+                                                                }
+                                                                .addOnFailureListener { e ->
+                                                                    Log.e("CambioNombre", "Error al actualizar chats", e)
+                                                                }
                                                         }
                                                 }
                                             }
                                     }
+
+
+
                                 }
                                 .addOnFailureListener {
                                     Log.w("modificacion", "Error al actualizar los datos")

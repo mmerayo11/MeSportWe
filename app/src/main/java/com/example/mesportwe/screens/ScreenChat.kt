@@ -207,8 +207,12 @@ fun BarraMensaje(
              "ultimoMsj" to value,
              "fecha" to FieldValue.serverTimestamp()
          )
-     )
-}
+     ).addOnSuccessListener {
+         Log.d("EnviarMensaje", "Chat actualizado correctamente para $chatId")
+     }.addOnFailureListener {
+         Log.e("EnviarMensaje", "Error al actualizar chat $chatId", it)
+     }
+ }
 
 @Composable
 fun getMensajes(chatId: String): State<List<Mensaje>> {

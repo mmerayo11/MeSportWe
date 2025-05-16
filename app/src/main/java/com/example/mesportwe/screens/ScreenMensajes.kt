@@ -20,6 +20,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,8 +51,10 @@ fun ScreenMensajes(navController: NavController){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BodyContentMensajes(navController: NavController){
-    val sessionManager = SessionManager(LocalContext.current)
-    val usuarioActivo = sessionManager.getUserDetails()["username"] ?: ""
+    val context = LocalContext.current
+    val sessionManager = remember { SessionManager(context) }
+    var usuarioActivo by remember { mutableStateOf(sessionManager.getUserDetails()["username"] ?: "") }
+
     val chats by getChats(usuarioActivo)
 
     LazyColumn (

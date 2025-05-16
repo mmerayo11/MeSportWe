@@ -467,9 +467,6 @@ fun registrarUsuario(
             Log.d("registro", "Las contraseñas no coinciden")
             // Las contraseñas no coinciden
             actualizarErrorContra2("Las contraseñas no coinciden")
-        } else if (!isLevelValid(textoNivel)){
-            Log.d("registro", "Nivel no válido")
-            actualizarErrorNivel("El nivel no es un entero comprendido entre 0 y 10")
         } else if (!isDescriptionValid(textoDescripcion)){
             Log.d("registro", "Descripcion muy extensa")
             actualizarErrorDescripcion("La descripción debe tener menos de 100 caracteres")
@@ -559,12 +556,6 @@ fun isEmailValid(email: String): Boolean {
         ("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z.]{2,}$").toRegex(RegexOption.IGNORE_CASE)
     return email.matches(emailPattern)
 }
-
-fun isLevelValid(texto: String): Boolean {
-    val levelPattern = "^[0-9]$|^10$".toRegex()
-    return texto.matches(levelPattern)
-}
-
 
 @Preview(showSystemUi = true)
 @Composable

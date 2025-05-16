@@ -191,7 +191,7 @@ fun BarraSuperior(
             },
             navigationIcon = {
                 if (mostrarFlecha && navController != null && destinoAlVolver != null) {
-                    IconButton(onClick = { navController.navigate(destinoAlVolver) }) {
+                    IconButton(onClick = { navController?.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Volver",
@@ -210,19 +210,8 @@ fun BarraSuperior(
 
 @Composable
 fun BarraInferior(navController: NavController) {
-    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
     val backStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry.value?.destination?.route
-
-    LaunchedEffect(currentRoute) {
-        when (currentRoute) {
-            "item_inicio" -> selectedItemIndex = 0
-            "item_mensajes" -> selectedItemIndex = 1
-            "item_favoritos" -> selectedItemIndex = 2
-            "item_perfil" -> selectedItemIndex = 3
-            else -> selectedItemIndex
-        }
-    }
 
     data class BottomNavItem(
         val titulo: String,
@@ -234,22 +223,22 @@ fun BarraInferior(navController: NavController) {
     val items = listOf(
         BottomNavItem("Inicio", "screen_inicio", Icons.Filled.Home, Icons.Outlined.Home),
         BottomNavItem("Mensajes", "screen_mensajes", Icons.AutoMirrored.Filled.Chat, Icons.AutoMirrored.Outlined.Chat),
-        BottomNavItem("Ubicaciones", "screen_favoritos", Icons.Default.Favorite, Icons.Default.FavoriteBorder),
         BottomNavItem("Perfil", "screen_perfil", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
     )
 
+    val selectedItemIndex = items.indexOfFirst { it.route == currentRoute }.takeIf { it >= 0 } ?: 0
+
     NavigationBar {
-        items.forEach { item ->
-            val selected = currentRoute == item.route
+        items.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = {
                     Icon(
-                        imageVector = if (selected) item.selecIcon else item.unselecIcon,
+                        imageVector = if (index == selectedItemIndex) item.selecIcon else item.unselecIcon,
                         contentDescription = item.titulo
                     )
                 },
                 label = { Text(item.titulo) },
-                selected = selected,
+                selected = index == selectedItemIndex,
                 onClick = {
                     if (currentRoute != item.route) {
                         navController.navigate(item.route) {
@@ -265,6 +254,7 @@ fun BarraInferior(navController: NavController) {
         }
     }
 }
+
 
 suspend fun encontrarUsuarios(): List<String> {
     val db = Firebase.firestore
