@@ -53,6 +53,9 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.example.mesportwe.SessionManager
 import com.example.mesportwe.ui.theme.MeSportWeTheme
+import com.example.mesportwe.ui.theme.onPrimaryLight
+import com.example.mesportwe.ui.theme.primaryLight
+import com.example.mesportwe.ui.theme.secondaryLight
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -146,7 +149,7 @@ fun BodyContentIS(navController: NavController){
 
             Text(
                 text = "Recupera tu contraseña",
-                color = colorScheme.secondary,
+                color = secondaryLight,
                 modifier = Modifier
                     .clickable {
                         recuperarContra(
@@ -177,8 +180,8 @@ fun BodyContentIS(navController: NavController){
                     )
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary
+                    containerColor = primaryLight,
+                    contentColor = onPrimaryLight
                 )
             ){
                 Text("INICIAR SESIÓN")
@@ -189,8 +192,8 @@ fun BodyContentIS(navController: NavController){
                     navController.navigate(route = AppScreens.ScreenCrearCuenta.route)
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary
+                    containerColor = primaryLight,
+                    contentColor = onPrimaryLight
                 )
             ) {
                 Text("NO TIENES CUENTA?")

@@ -40,6 +40,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mesportwe.SessionManager
 import com.example.mesportwe.navigation.AppScreens
 import com.example.mesportwe.ui.theme.MeSportWeTheme
+import com.example.mesportwe.ui.theme.onPrimaryLight
+import com.example.mesportwe.ui.theme.primaryLight
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.auth
@@ -289,8 +291,8 @@ fun BodyContentPerfil(navController: NavController){
                 textosActivos = !textosActivos
             },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary
+                    containerColor = primaryLight,
+                    contentColor = onPrimaryLight
                 )
             ) {
                 if (textosActivos == false) {
@@ -304,8 +306,8 @@ fun BodyContentPerfil(navController: NavController){
                 navController.navigate(route = AppScreens.ScreenCambioContra.route)
             },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary
+                    containerColor = primaryLight,
+                    contentColor = onPrimaryLight
                 )
             ) {
                 Text("CAMBIAR CONTRASEÑA")
@@ -315,8 +317,8 @@ fun BodyContentPerfil(navController: NavController){
                 cerrarSesion(navController, context)
             },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary
+                    containerColor = primaryLight,
+                    contentColor = onPrimaryLight
                 )
             ) {
                 Text("CERRAR SESIÓN")
@@ -326,8 +328,8 @@ fun BodyContentPerfil(navController: NavController){
                 eliminarCuenta(navController, context)
             },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary
+                    containerColor = primaryLight,
+                    contentColor = onPrimaryLight
                 )
             ) {
                 Text("ELIMINAR CUENTA")

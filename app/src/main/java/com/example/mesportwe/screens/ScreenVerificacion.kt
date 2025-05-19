@@ -37,6 +37,12 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.ktx.Firebase
 import com.example.mesportwe.SessionManager
 import com.example.mesportwe.ui.theme.MeSportWeTheme
+import com.example.mesportwe.ui.theme.errorContainerLight
+import com.example.mesportwe.ui.theme.onErrorContainerLight
+import com.example.mesportwe.ui.theme.onPrimaryLight
+import com.example.mesportwe.ui.theme.onSecondaryContainerLight
+import com.example.mesportwe.ui.theme.primaryLight
+import com.example.mesportwe.ui.theme.secondaryContainerLight
 
 @Composable
 fun ScreenVerificacion(navController: NavController) {
@@ -61,7 +67,7 @@ fun ScreenVerificacion(navController: NavController) {
                             bottomEnd = 0.dp
                         )
                     )
-                    .background(colorScheme.secondaryContainer),
+                    .background(secondaryContainerLight),
                 contentAlignment = Alignment.Center
             ) {
                 Column(
@@ -69,7 +75,7 @@ fun ScreenVerificacion(navController: NavController) {
                 ) {
                     Text(
                         text = "Para poder continuar es necesario verificar el correo introducido. Por favor revisa tu bandeja de entrada",
-                        color = colorScheme.onSecondaryContainer,
+                        color = onSecondaryContainerLight,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .padding(
@@ -86,8 +92,8 @@ fun ScreenVerificacion(navController: NavController) {
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = colorScheme.primary,
-                            contentColor = colorScheme.onPrimary
+                            containerColor = primaryLight,
+                            contentColor = onPrimaryLight
                         ),
                         shape = RoundedCornerShape(14.dp),
                         modifier = Modifier
@@ -119,12 +125,12 @@ fun ScreenVerificacion(navController: NavController) {
                                 bottomEnd = 14.dp
                             )
                         )
-                        .background(colorScheme.errorContainer),
+                        .background(errorContainerLight),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         message,
-                        color = colorScheme.onErrorContainer,
+                        color = onErrorContainerLight,
                         modifier = Modifier.padding(
                             top = 16.dp,
                             bottom = 12.dp
@@ -148,14 +154,14 @@ fun ScreenVerificacion(navController: NavController) {
                                 bottomEnd = 14.dp
                             )
                         )
-                        .background(colorScheme.secondaryContainer),
+                        .background(secondaryContainerLight),
                 ) {
                     Text(text = "")
                 }
             }
             Text(
                 text = "¿No lo encuentras? Reenviar correo",
-                color = colorScheme.primary,
+                color = primaryLight,
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier
                     .padding(top = 12.dp)

@@ -58,6 +58,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.mesportwe.ui.theme.MeSportWeTheme
+import com.example.mesportwe.ui.theme.onPrimaryContainerLight
+import com.example.mesportwe.ui.theme.onPrimaryLight
+import com.example.mesportwe.ui.theme.primaryContainerLight
+import com.example.mesportwe.ui.theme.primaryLight
+import com.example.mesportwe.ui.theme.secondaryLight
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import kotlinx.coroutines.launch
@@ -108,15 +113,15 @@ fun BodyContentInicio(padding: PaddingValues, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             usuarioActual?.let { usuario ->
-                Text(text = usuario.nomUser, color = colorScheme.secondary)
+                Text(text = usuario.nomUser, color = secondaryLight)
                 Spacer(modifier = Modifier.height(24.dp))
-                Text(text = usuario.nombre, color = colorScheme.secondary)
+                Text(text = usuario.nombre, color = secondaryLight)
                 Spacer(modifier = Modifier.height(24.dp))
-                Text(text = usuario.localidad, color = colorScheme.secondary)
+                Text(text = usuario.localidad, color = secondaryLight)
                 Spacer(modifier = Modifier.height(24.dp))
-                Text(text = "${usuario.deporte}, ${usuario.nivel}", color = colorScheme.secondary)
+                Text(text = "${usuario.deporte}, ${usuario.nivel}", color = secondaryLight)
                 Spacer(modifier = Modifier.height(24.dp))
-                Text(text = usuario.descripcion, color = colorScheme.secondary)
+                Text(text = usuario.descripcion, color = secondaryLight)
                 Spacer(modifier = Modifier.height(60.dp))
 
                 if (usuario.nomUser != "No hay usuarios disponibles en este momento") {
@@ -138,8 +143,8 @@ fun BodyContentInicio(padding: PaddingValues, navController: NavController) {
                         }
                     },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = colorScheme.primary,
-                            contentColor = colorScheme.onPrimary
+                            containerColor = primaryLight,
+                            contentColor = onPrimaryLight
                         )
                     ) {
                         Text("ENVIAR MENSAJE")
@@ -167,8 +172,8 @@ fun BodyContentInicio(padding: PaddingValues, navController: NavController) {
                         }
                     },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = colorScheme.primary,
-                            contentColor = colorScheme.onPrimary
+                            containerColor = primaryLight,
+                            contentColor = onPrimaryLight
                         )
                     ) {
                         Text("SIGUIENTE USUARIO")
@@ -197,7 +202,7 @@ fun BarraSuperior(
                     text = t,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
-                    color = colorScheme.primary,
+                    color = primaryLight,
                 )
             },
             navigationIcon = {
@@ -206,7 +211,7 @@ fun BarraSuperior(
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Volver",
-                            tint = colorScheme.primary
+                            tint = primaryLight
                         )
                     }
                 } else {
@@ -240,8 +245,8 @@ fun BarraInferior(navController: NavController) {
     val selectedItemIndex = items.indexOfFirst { it.route == currentRoute }.takeIf { it >= 0 } ?: 0
 
     NavigationBar(
-        containerColor = colorScheme.primaryContainer,
-        contentColor = colorScheme.onPrimaryContainer
+        containerColor = primaryContainerLight,
+        contentColor = onPrimaryContainerLight
     ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(

@@ -63,6 +63,15 @@ import kotlinx.datetime.toLocalDateTime
 import androidx.compose.runtime.State
 import androidx.compose.ui.graphics.Color
 import com.example.mesportwe.ui.theme.MeSportWeTheme
+import com.example.mesportwe.ui.theme.onPrimaryContainerLight
+import com.example.mesportwe.ui.theme.onSecondaryContainerLight
+import com.example.mesportwe.ui.theme.onSurfaceLight
+import com.example.mesportwe.ui.theme.onSurfaceVariantLight
+import com.example.mesportwe.ui.theme.outlineLight
+import com.example.mesportwe.ui.theme.primaryContainerLight
+import com.example.mesportwe.ui.theme.primaryLight
+import com.example.mesportwe.ui.theme.secondaryContainerLight
+import com.example.mesportwe.ui.theme.surfaceLight
 import kotlinx.datetime.LocalDate
 
 
@@ -165,25 +174,25 @@ fun BarraMensaje(
     onEnviarClick: () -> Unit
 ){
     BottomAppBar(
-        containerColor = colorScheme.surface,
-        contentColor = colorScheme.onSurface
+        containerColor = surfaceLight,
+        contentColor = onSurfaceLight
     ) {
         OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
                 .padding(8.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = colorScheme.primary,
-                unfocusedBorderColor = colorScheme.outline,
-                cursorColor = colorScheme.primary,
-                focusedTextColor = colorScheme.onSurface,
-                unfocusedTextColor = colorScheme.onSurface
+                focusedBorderColor = primaryLight,
+                unfocusedBorderColor = outlineLight,
+                cursorColor = primaryLight,
+                focusedTextColor = onSurfaceLight,
+                unfocusedTextColor = onSurfaceLight
             ),
             value = mensaje,
             onValueChange = onMensajeChange,
             placeholder = {Text(
                 "Escribe un mensaje...",
-                color = colorScheme.onSurfaceVariant
+                color = onSurfaceVariantLight
             )}
         )
         IconButton(
@@ -193,7 +202,7 @@ fun BarraMensaje(
             Icon(
                 imageVector = Icons.Default.Send,
                 contentDescription = "Enviar",
-                tint = colorScheme.primary
+                tint = primaryLight
             )
         }
     }
@@ -266,19 +275,19 @@ fun BubbleMensaje(mensaje: Mensaje, esPropio: Boolean) {
         horizontalAlignment = if (esPropio) Alignment.End else Alignment.Start
     ) {
         Surface(
-            color = if (esPropio) colorScheme.primaryContainer else colorScheme.secondaryContainer,
+            color = if (esPropio) primaryContainerLight else secondaryContainerLight,
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(
                 modifier = Modifier.padding(12.dp)
             ) {
                 Text(text = mensaje.mensaje, color = if (esPropio)
-                    colorScheme.onPrimaryContainer
+                    onPrimaryContainerLight
                 else
-                    colorScheme.onSecondaryContainer)
+                    onSecondaryContainerLight)
                 Text(
                     text = obtenerHora(mensaje.fecha),
-                    color = colorScheme.outline,
+                    color = outlineLight,
                     style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier.align(Alignment.End)
                 )

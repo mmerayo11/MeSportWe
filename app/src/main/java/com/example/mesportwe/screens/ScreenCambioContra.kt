@@ -42,6 +42,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mesportwe.SessionManager
 import com.example.mesportwe.navigation.AppScreens
 import com.example.mesportwe.ui.theme.MeSportWeTheme
+import com.example.mesportwe.ui.theme.onPrimaryLight
+import com.example.mesportwe.ui.theme.primaryLight
 import com.google.firebase.Firebase
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.auth
@@ -166,8 +168,8 @@ fun ScreenCambioContra(navController: NavController) {
 
             },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary
+                    containerColor = primaryLight,
+                    contentColor = onPrimaryLight
                 )
             ) {
                 Text("CONFIRMAR CAMBIOS")
@@ -177,8 +179,8 @@ fun ScreenCambioContra(navController: NavController) {
                 navController.navigate(route = AppScreens.ScreenPerfil.route)
             },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary
+                    containerColor = primaryLight,
+                    contentColor = onPrimaryLight
                 )
             ) {
                 Text("CANCELAR")

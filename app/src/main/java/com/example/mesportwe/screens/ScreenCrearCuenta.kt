@@ -50,6 +50,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mesportwe.navigation.AppScreens
 import com.example.mesportwe.ui.theme.MeSportWeTheme
+import com.example.mesportwe.ui.theme.onPrimaryLight
+import com.example.mesportwe.ui.theme.primaryLight
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
@@ -375,8 +377,8 @@ fun BodyContentCC(navController: NavController){
                 )
             },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary
+                    containerColor = primaryLight,
+                    contentColor = onPrimaryLight
                 )
             ) {
                 Text("REGISTRAR")
@@ -385,8 +387,8 @@ fun BodyContentCC(navController: NavController){
                 navController.navigate(route = AppScreens.ScreenInicioSesion.route)
             },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary
+                    containerColor = primaryLight,
+                    contentColor = onPrimaryLight
                 )
             ) {
                 Text("YA TIENES UNA CUENTA?")
