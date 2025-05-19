@@ -21,6 +21,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Chat
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -50,13 +51,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.mesportwe.SessionManager
 import com.example.mesportwe.navigation.AppScreens
-import com.example.mesportwe.ui.theme.MeSportWeTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.mesportwe.ui.theme.MeSportWeTheme
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import kotlinx.coroutines.launch
@@ -135,7 +136,12 @@ fun BodyContentInicio(padding: PaddingValues, navController: NavController) {
                                 Log.e("chat", "Error al crear chat")
                             }
                         }
-                    }) {
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorScheme.primary,
+                            contentColor = colorScheme.onPrimary
+                        )
+                    ) {
                         Text("ENVIAR MENSAJE")
                     }
 
@@ -159,7 +165,12 @@ fun BodyContentInicio(padding: PaddingValues, navController: NavController) {
                                 )
                             }
                         }
-                    }) {
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorScheme.primary,
+                            contentColor = colorScheme.onPrimary
+                        )
+                    ) {
                         Text("SIGUIENTE USUARIO")
                     }
                 }
@@ -228,7 +239,10 @@ fun BarraInferior(navController: NavController) {
 
     val selectedItemIndex = items.indexOfFirst { it.route == currentRoute }.takeIf { it >= 0 } ?: 0
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = colorScheme.primaryContainer,
+        contentColor = colorScheme.onPrimaryContainer
+    ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = {

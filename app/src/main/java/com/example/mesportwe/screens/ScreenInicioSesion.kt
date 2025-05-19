@@ -18,9 +18,11 @@ import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -46,11 +48,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mesportwe.navigation.AppScreens
-import com.example.mesportwe.ui.theme.MeSportWeTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.example.mesportwe.SessionManager
+import com.example.mesportwe.ui.theme.MeSportWeTheme
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -173,13 +175,24 @@ fun BodyContentIS(navController: NavController){
                         { nuevoMensaje -> textoErrorPass = nuevoMensaje },
                         { nuevoMensaje -> textoSnackbar = nuevoMensaje }
                     )
-                }){
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
+                )
+            ){
                 Text("INICIAR SESIÓN")
             }
 
-            Button(onClick =  {
-                navController.navigate(route = AppScreens.ScreenCrearCuenta.route)
-            }) {
+            Button(
+                onClick =  {
+                    navController.navigate(route = AppScreens.ScreenCrearCuenta.route)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
+                )
+            ) {
                 Text("NO TIENES CUENTA?")
             }
         }

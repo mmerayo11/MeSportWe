@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -163,13 +164,23 @@ fun ScreenCambioContra(navController: NavController) {
                     textoSnackBar = "Error: No se pudo obtener el correo del usuario."
                 }
 
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
+                )
+            ) {
                 Text("CONFIRMAR CAMBIOS")
             }
 
             Button(onClick = {
                 navController.navigate(route = AppScreens.ScreenPerfil.route)
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
+                )
+            ) {
                 Text("CANCELAR")
             }
         }

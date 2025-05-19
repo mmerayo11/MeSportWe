@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -83,6 +85,10 @@ fun ScreenVerificacion(navController: NavController) {
                                 message = nuevoMensaje
                             }
                         },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorScheme.primary,
+                            contentColor = colorScheme.onPrimary
+                        ),
                         shape = RoundedCornerShape(14.dp),
                         modifier = Modifier
                             .padding(
@@ -148,14 +154,14 @@ fun ScreenVerificacion(navController: NavController) {
                 }
             }
             Text(
-                text = "¿No lo encuentras? Volver a enviar correo",
-                color = colorScheme.secondary,
-                modifier = Modifier.clickable {
-                    reenviarCorreo { nuevoMensaje ->
-                        message = nuevoMensaje
-                    }
-                }
+                text = "¿No lo encuentras? Reenviar correo",
+                color = colorScheme.primary,
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier
+                    .padding(top = 12.dp)
+                    .clickable { reenviarCorreo { message = it } }
             )
+
         }
     }
 }

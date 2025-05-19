@@ -13,10 +13,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -285,7 +287,12 @@ fun BodyContentPerfil(navController: NavController){
                     )
                 }
                 textosActivos = !textosActivos
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
+                )
+            ) {
                 if (textosActivos == false) {
                     Text("EDITAR DATOS")
                 } else {
@@ -295,19 +302,34 @@ fun BodyContentPerfil(navController: NavController){
 
             Button(onClick = {
                 navController.navigate(route = AppScreens.ScreenCambioContra.route)
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
+                )
+            ) {
                 Text("CAMBIAR CONTRASEÑA")
             }
 
             Button(onClick = {
                 cerrarSesion(navController, context)
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
+                )
+            ) {
                 Text("CERRAR SESIÓN")
             }
 
             Button(onClick = {
                 eliminarCuenta(navController, context)
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
+                )
+            ) {
                 Text("ELIMINAR CUENTA")
             }
         }
@@ -352,46 +374,6 @@ fun eliminarCuenta(navController: NavController, context: Context) {
     navController.navigate(route = AppScreens.ScreenInicioSesion.route)
 }
 
-suspend fun getUbi(): String {
-    val db = Firebase.firestore
-    val uid = Firebase.auth.currentUser?.uid
-    val userDocument = db.collection("usuarios").document(uid!!).get().await()
-    val ubi = userDocument.get("Localidad") as String
-    return ubi
-}
-
-suspend fun getNombre(): String {
-    val db = Firebase.firestore
-    val uid = Firebase.auth.currentUser?.uid
-    val userDocument = db.collection("usuarios").document(uid!!).get().await()
-    val nombre = userDocument.get("Nombre") as String
-    return nombre
-}
-
-suspend fun getDeporte(): String {
-    val db = Firebase.firestore
-    val uid = Firebase.auth.currentUser?.uid
-    val userDocument = db.collection("usuarios").document(uid!!).get().await()
-    val deporte = userDocument.get("deportes") as String
-    return deporte
-}
-
-suspend fun getNivel(): String {
-    val db = Firebase.firestore
-    val uid = Firebase.auth.currentUser?.uid
-    val userDocument = db.collection("usuarios").document(uid!!).get().await()
-    val nivel = userDocument.get("nivel") as String
-    return nivel
-}
-
-suspend fun getDescripcion(): String {
-    val db = Firebase.firestore
-    val uid = Firebase.auth.currentUser?.uid
-    val userDocument = db.collection("usuarios").document(uid!!).get().await()
-    val descripcion = userDocument.get("Descripcion") as String
-    return descripcion
-}
-
 fun cambioDatos(
     usuario: String,
     ubicacion: String,
@@ -408,7 +390,7 @@ fun cambioDatos(
     )   {
     val auth = com.google.firebase.Firebase.auth
     val db = com.google.firebase.Firebase.firestore
-    var user = com.google.firebase.Firebase.auth.currentUser
+    val user = com.google.firebase.Firebase.auth.currentUser
     val uid = user?.uid
     actualizarErrorUsuario("")
     actualizarErrorUbi("")
@@ -480,8 +462,8 @@ fun cambioDatos(
 
                                                     chatData["usuarios"] = usuarios
 
-                                                    val deporte = chatData["deporte"] as? String ?: "general"
-                                                    val newChatId = usuarios.joinToString("_") + "_$deporte"
+                                                    val deporteC = chatData["deporte"] as? String ?: "general"
+                                                    val newChatId = usuarios.joinToString("_") + "_$deporteC"
 
                                                     val newChatRef = db.collection("chats").document(newChatId)
                                                     val oldChatRef = chatDoc.reference

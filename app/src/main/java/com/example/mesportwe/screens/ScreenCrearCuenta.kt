@@ -17,12 +17,14 @@ import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -371,12 +373,22 @@ fun BodyContentCC(navController: NavController){
                     { nuevoMensaje -> textoErrorDescripcion = nuevoMensaje },
                     { nuevoMensaje -> textoSnackbar = nuevoMensaje },
                 )
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
+                )
+            ) {
                 Text("REGISTRAR")
             }
             Button(onClick = {
                 navController.navigate(route = AppScreens.ScreenInicioSesion.route)
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
+                )
+            ) {
                 Text("YA TIENES UNA CUENTA?")
             }
         }
