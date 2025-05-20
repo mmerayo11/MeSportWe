@@ -1,6 +1,5 @@
 package com.example.mesportwe.screens
 
-import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,12 +12,8 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Chat
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.Chat
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -26,9 +21,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -58,6 +53,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.mesportwe.ui.theme.MeSportWeTheme
+import com.example.mesportwe.ui.theme.onBackgroundLight
 import com.example.mesportwe.ui.theme.onPrimaryContainerLight
 import com.example.mesportwe.ui.theme.onPrimaryLight
 import com.example.mesportwe.ui.theme.primaryContainerLight
@@ -246,17 +242,23 @@ fun BarraInferior(navController: NavController) {
 
     NavigationBar(
         containerColor = primaryContainerLight,
-        contentColor = onPrimaryContainerLight
+        contentColor = onBackgroundLight
     ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = {
                     Icon(
                         imageVector = if (index == selectedItemIndex) item.selecIcon else item.unselecIcon,
-                        contentDescription = item.titulo
+                        contentDescription = item.titulo,
+                        tint = primaryLight
                     )
                 },
-                label = { Text(item.titulo) },
+                label = {
+                    Text(
+                        item.titulo,
+                        color = primaryLight
+                    )
+                },
                 selected = index == selectedItemIndex,
                 onClick = {
                     if (currentRoute != item.route) {

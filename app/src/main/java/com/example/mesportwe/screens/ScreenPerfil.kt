@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -139,7 +140,13 @@ fun BodyContentPerfil(navController: NavController){
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     modifier = Modifier.fillMaxWidth(),
-                    isError = textoErrorUsuario.isNotEmpty()
+                    isError = textoErrorUsuario.isNotEmpty(),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = primaryLight,
+                        unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                        focusedLabelColor = primaryLight,
+                        cursorColor = primaryLight,
+                    )
                 )
             }
 
@@ -152,6 +159,12 @@ fun BodyContentPerfil(navController: NavController){
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = primaryLight,
+                        unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                        focusedLabelColor = primaryLight,
+                        cursorColor = primaryLight,
+                    )
                 )
             }
 
@@ -167,7 +180,13 @@ fun BodyContentPerfil(navController: NavController){
                     label = { Text("Localidad") },
                     modifier = Modifier
                         .menuAnchor()
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = primaryLight,
+                        unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                        focusedLabelColor = primaryLight,
+                        cursorColor = primaryLight,
+                    )
                 )
                 ExposedDropdownMenu(
                     expanded = expanded,
@@ -193,6 +212,12 @@ fun BodyContentPerfil(navController: NavController){
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
             ExposedDropdownMenuBox(
                 expanded = expanded2,
@@ -206,7 +231,13 @@ fun BodyContentPerfil(navController: NavController){
                     readOnly = true,
                     modifier = Modifier
                         .menuAnchor()
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = primaryLight,
+                        unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                        focusedLabelColor = primaryLight,
+                        cursorColor = primaryLight,
+                    )
                 )
                 ExposedDropdownMenu(
                     expanded = expanded2,
@@ -235,7 +266,13 @@ fun BodyContentPerfil(navController: NavController){
                     readOnly = true,
                     modifier = Modifier
                         .menuAnchor()
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = primaryLight,
+                        unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                        focusedLabelColor = primaryLight,
+                        cursorColor = primaryLight,
+                    )
                 )
                 ExposedDropdownMenu(
                     expanded = expanded3,
@@ -260,6 +297,12 @@ fun BodyContentPerfil(navController: NavController){
                 label = { Text("Descripción") },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 modifier = Modifier.fillMaxWidth().heightIn(min=56.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
 
             Spacer(modifier = Modifier.height(24.dp))

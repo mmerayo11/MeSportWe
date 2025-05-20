@@ -19,15 +19,15 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -67,6 +67,7 @@ fun ScreenInicioSesion(navController: NavController){
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BodyContentIS(navController: NavController){
 
@@ -98,8 +99,8 @@ fun BodyContentIS(navController: NavController){
 
             OutlinedTextField(
                 value = textoCorreo,
-                onValueChange = {textoCorreo = it},
-                label = {Text ("Correo electrónico")},
+                onValueChange = { textoCorreo = it },
+                label = { Text("Correo electrónico") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 keyboardActions = KeyboardActions(onNext = { focusRequester.requestFocus() }),
@@ -107,13 +108,19 @@ fun BodyContentIS(navController: NavController){
                 isError = textoErrorCorreo.isNotEmpty(),
                 supportingText = { Text(textoErrorCorreo) },
                 trailingIcon = {
-                    (if (textoErrorCorreo.isNotEmpty()) Icons.Default.ErrorOutline else null)?.let {
+                    if (textoErrorCorreo.isNotEmpty()) {
                         Icon(
-                            imageVector = it,
+                            imageVector = Icons.Default.ErrorOutline,
                             contentDescription = "Mensaje de error"
                         )
                     }
-                }
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -135,6 +142,12 @@ fun BodyContentIS(navController: NavController){
                         )
                     }
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focusRequester)
@@ -200,7 +213,6 @@ fun BodyContentIS(navController: NavController){
             }
         }
     }
-
 }
 
 fun recuperarContra(

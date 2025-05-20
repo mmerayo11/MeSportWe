@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,6 +22,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +50,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.auth
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenCambioContra(navController: NavController) {
 
@@ -99,7 +102,13 @@ fun ScreenCambioContra(navController: NavController) {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusRequester)
+                    .focusRequester(focusRequester),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
 
             OutlinedTextField(
@@ -125,7 +134,13 @@ fun ScreenCambioContra(navController: NavController) {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusRequester)
+                    .focusRequester(focusRequester),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
 
             OutlinedTextField(
@@ -148,7 +163,13 @@ fun ScreenCambioContra(navController: NavController) {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusRequester)
+                    .focusRequester(focusRequester),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
 
             Button(onClick = {

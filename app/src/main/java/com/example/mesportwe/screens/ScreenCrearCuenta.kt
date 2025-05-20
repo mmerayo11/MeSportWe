@@ -29,6 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -152,7 +153,13 @@ fun BodyContentCC(navController: NavController){
                             contentDescription = "Mensaje de error"
                         )
                     }
-                }
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
 
             OutlinedTextField(
@@ -178,7 +185,13 @@ fun BodyContentCC(navController: NavController){
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusRequester)
+                    .focusRequester(focusRequester),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
 
             OutlinedTextField(
@@ -201,7 +214,13 @@ fun BodyContentCC(navController: NavController){
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusRequester)
+                    .focusRequester(focusRequester),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
 
             OutlinedTextField(
@@ -223,7 +242,13 @@ fun BodyContentCC(navController: NavController){
                             contentDescription = "Mensaje de error"
                         )
                     }
-                }
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
             ExposedDropdownMenuBox(
                 expanded = expanded,
@@ -237,7 +262,13 @@ fun BodyContentCC(navController: NavController){
                     modifier = Modifier
                         .menuAnchor()
                         .fillMaxWidth()
-                        .focusRequester(focusRequester)
+                        .focusRequester(focusRequester),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = primaryLight,
+                        unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                        focusedLabelColor = primaryLight,
+                        cursorColor = primaryLight,
+                    )
                 )
                 ExposedDropdownMenu(
                     expanded = expanded,
@@ -263,7 +294,13 @@ fun BodyContentCC(navController: NavController){
                 keyboardActions = KeyboardActions(onNext = { focusRequester6.requestFocus() }),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusRequester)
+                    .focusRequester(focusRequester),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
 
             OutlinedTextField(
@@ -275,7 +312,13 @@ fun BodyContentCC(navController: NavController){
                 keyboardActions = KeyboardActions(onNext = { focusRequester7.requestFocus() }),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusRequester)
+                    .focusRequester(focusRequester),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
 
             ExposedDropdownMenuBox(
@@ -290,7 +333,13 @@ fun BodyContentCC(navController: NavController){
                     modifier = Modifier
                         .menuAnchor()
                         .fillMaxWidth()
-                        .focusRequester(focusRequester)
+                        .focusRequester(focusRequester),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = primaryLight,
+                        unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                        focusedLabelColor = primaryLight,
+                        cursorColor = primaryLight,
+                    )
                 )
                 ExposedDropdownMenu(
                     expanded = expanded2,
@@ -320,6 +369,12 @@ fun BodyContentCC(navController: NavController){
                         .menuAnchor()
                         .fillMaxWidth()
                         .focusRequester(focusRequester),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = primaryLight,
+                        unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                        focusedLabelColor = primaryLight,
+                        cursorColor = primaryLight,
+                    )
                 )
                 ExposedDropdownMenu(
                     expanded = expanded3,
@@ -346,7 +401,13 @@ fun BodyContentCC(navController: NavController){
                 keyboardActions = KeyboardActions(onNext = { focusRequester7.requestFocus() }),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusRequester)
+                    .focusRequester(focusRequester),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = primaryLight.copy(alpha = 0.5f),
+                    focusedLabelColor = primaryLight,
+                    cursorColor = primaryLight,
+                )
             )
 
             Button(onClick = {

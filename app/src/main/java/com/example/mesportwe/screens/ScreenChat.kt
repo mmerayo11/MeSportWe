@@ -275,7 +275,7 @@ fun BubbleMensaje(mensaje: Mensaje, esPropio: Boolean) {
         horizontalAlignment = if (esPropio) Alignment.End else Alignment.Start
     ) {
         Surface(
-            color = if (esPropio) primaryContainerLight else secondaryContainerLight,
+            color = if (esPropio) primaryLight else secondaryContainerLight,
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(

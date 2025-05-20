@@ -57,28 +57,17 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
 
-    //implementation("androidx.compose.material:material:1.4.2")
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.material3.android)
-    // view model
+
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    // iconos
+
     implementation(libs.androidx.material.icons.extended.android)
-    // rebote, no funciona
     implementation(libs.accompanist.insets)
-    // cambiar barra de tareas
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.storage)
     implementation(libs.firebase.vertexai)
-    //implementation(libs.firebase.auth.ktx)
-    //implementation(libs.firebase.perf.ktx)
-    // ocultar top bar
-    // implementation("com.google.accompanist:accompanist-coil:0.16.0")
-    // animaciones nav host
-    // implementation("com.google.accompanist:accompanist-navigation-animation:0.23.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit.v121)
@@ -104,5 +93,7 @@ dependencies {
     implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.0.2")
     implementation("com.maxkeppeler.sheets-compose-dialogs:clock:1.0.2")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+    implementation("androidx.compose.material3:material3:1.2.1")
+
 
 }

@@ -128,7 +128,7 @@ fun getChats(user: String): MutableState<List<Chat>> {
         val db = Firebase.firestore
         db.collection("chats")
             .whereArrayContains("usuarios", user)
-            .orderBy("fecha", Query.Direction.ASCENDING)
+            .orderBy("fecha", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.e("Mensajes", "Error escuchando chats", error)
