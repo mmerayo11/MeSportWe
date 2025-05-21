@@ -64,6 +64,7 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.graphics.Color
 import com.example.mesportwe.ui.theme.MeSportWeTheme
 import com.example.mesportwe.ui.theme.onPrimaryContainerLight
+import com.example.mesportwe.ui.theme.onPrimaryLight
 import com.example.mesportwe.ui.theme.onSecondaryContainerLight
 import com.example.mesportwe.ui.theme.onSurfaceLight
 import com.example.mesportwe.ui.theme.onSurfaceVariantLight
@@ -282,12 +283,12 @@ fun BubbleMensaje(mensaje: Mensaje, esPropio: Boolean) {
                 modifier = Modifier.padding(12.dp)
             ) {
                 Text(text = mensaje.mensaje, color = if (esPropio)
-                    onPrimaryContainerLight
+                    onPrimaryLight
                 else
                     onSecondaryContainerLight)
                 Text(
                     text = obtenerHora(mensaje.fecha),
-                    color = outlineLight,
+                    color = onSecondaryContainerLight,
                     style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier.align(Alignment.End)
                 )
